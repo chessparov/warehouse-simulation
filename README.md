@@ -1,2 +1,2 @@
-# warehouse-simulation
+# WareHouse simulation
 Discrete events simulation of a warehouse
