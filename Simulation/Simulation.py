@@ -132,10 +132,10 @@ def runSimulation(facility):
 
     env.run(until=v.SIM_TIME)
     facility.setLoglist(order_data)
-    facility.setPath(r'C:\Users\Cristian\PycharmProjects\pythonProject\Warehouse\Test')
+    facility.setPath(r'.\Test')
     facility.saveLog()
     dtfItems = pd.DataFrame(items_data, columns=['Item', 'Position', 'Shelf', 'Row', 'Column', 'Pick Time', 'Deliver Time'])
-    dtfItems.to_csv(r'C:\Users\Cristian\PycharmProjects\pythonProject\Warehouse\Test\items_log.csv', index=False)
+    dtfItems.to_csv(r'.\Test\items_log.csv', index=False)
 
     # Analyze data
     print(f'\n{"-"*40}\n'
