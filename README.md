@@ -1,4 +1,4 @@
-# WareHouse simulation
+# Warehouse simulation
 [![Bintray](https://img.shields.io/badge/python-3.12-blue?style=flat-square&logo=Python&logoColor=yellow&color=blue)](https://www.python.org/) [![Bintray](https://img.shields.io/badge/simpy-4.1.1-lightgreen?style=flat-square&logo=Simpy&logoColor=yellow&color=green)](https://simpy.readthedocs.io/en/latest/) [![Bintray](https://img.shields.io/badge/Maintainability-D-turkey?style=flat-square&logo=Code%20Climate&color=orange)](https://codeclimate.com/github/chessparov/warehouse-simulation)
 
 
