@@ -40,7 +40,7 @@ def run():
     end_time = 0
 
     # Import items to pick
-    path_name = Path(r'.\Test\items_log.csv')
+    path_name = Path(r'.\items_log.csv')
     dtfData = pd.read_csv(path_name)
     coordinates = []
     for i in dtfData.index:
