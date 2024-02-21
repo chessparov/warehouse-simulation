@@ -29,9 +29,6 @@ def pickItem(env, facility, art: str, resource):
     pick_time = (x_dist/v.WORKER_SPEED_X + y_dist/v.WORKER_SPEED_Y
                  + z_dist/v.WORKER_SPEED_Z + v.WORKER_PICKING_TIME)
 
-    # print(z_dist/v.WORKER_SPEED_Z + v.WORKER_PICKING_TIME)
-    # print(x_dist/v.WORKER_SPEED_X + y_dist/v.WORKER_SPEED_Y)
-
     with resource.request() as req:
         yield req
         start_time = round(env.now, 1)
@@ -132,10 +129,10 @@ def runSimulation(facility):
 
     env.run(until=v.SIM_TIME)
     facility.setLoglist(order_data)
-    facility.setPath(r'.\Test')
+    facility.setPath(r'.\\')
     facility.saveLog()
     dtfItems = pd.DataFrame(items_data, columns=['Item', 'Position', 'Shelf', 'Row', 'Column', 'Pick Time', 'Deliver Time'])
-    dtfItems.to_csv(r'.\Test\items_log.csv', index=False)
+    dtfItems.to_csv(r'.\items_log.csv', index=False)
 
     # Analyze data
     print(f'\n{"-"*40}\n'

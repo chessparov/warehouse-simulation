@@ -45,7 +45,7 @@ class TMainWindow(QMainWindow):
         layout = QVBoxLayout(self)
 
         # Add item labels
-        path_name = Path(r'.\Test\items_log.csv')
+        path_name = Path(r'C:\Users\Cristian\PycharmProjects\pythonProject\Warehouse\Test\items_log.csv')
         dtfData = pd.read_csv(path_name)
 
         for i, item in enumerate(dtfData['Item']):
