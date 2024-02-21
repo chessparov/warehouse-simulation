@@ -84,7 +84,7 @@ class TFacility:
         arrShelfs = np.array(self.lstShelfs)
         self.__layout = np.reshape(arrShelfs, (2, shelf_number))
 
-        self.__path = r'C:\Users\Cristian\Desktop'
+        self.__path = r".\\"
         self.__logList = []
         self.__log = pd.DataFrame
 
