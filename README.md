@@ -1,5 +1,5 @@
 # WareHouse simulation
-<img src="https://img.shields.io/badge/python-3.12-blue?style=flat-square&logo=Python&logoColor=yellow&color=blue&link=https%3A%2F%2Fwww.python.org%2F"> <img src="https://img.shields.io/badge/simpy-4.1.1-lightgreen?style=flat-square&logo=Simpy&logoColor=yellow&color=green&link=https://simpy.readthedocs.io/en/latest/"> <img src="https://img.shields.io/badge/Maintainability-D-turkey?style=flat-square&logo=Code%20Climate&color=orange&link=https%3A%2F%2Fcodeclimate.com%2Fgithub%2Fchessparov%2Fwarehouse-simulation">
+<img src="https://img.shields.io/badge/python-3.12-blue?style=flat-square&logo=Python&logoColor=yellow&color=blue&link=https%3A%2F%2Fwww.python.org%2F"> <img src="https://img.shields.io/badge/simpy-4.1.1-lightgreen?style=flat-square&logo=Simpy&logoColor=yellow&color=green&link=https://simpy.readthedocs.io/en/latest/"> <img src="https://img.shields.io/badge/Maintainability-D-turkey?style=flat-square&logo=Code%20Climate&color=orange&link=https%3A%2F%2Fcodeclimate.com%2Fgithub%2Fchessparov%2Fwarehouse-simulation"> [![Bintray](https://img.shields.io/badge/simpy-4.1.1-lightgreen?style=flat-square&logo=Simpy&logoColor=yellow&color=green)](https://simpy.readthedocs.io/en/latest/)
 
 
 
