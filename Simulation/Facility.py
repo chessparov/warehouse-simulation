@@ -1,3 +1,4 @@
+import Variables as v
 import uuid
 import numpy as np
 from collections import defaultdict
@@ -5,7 +6,6 @@ import time
 import datetime
 import pandas as pd
 from pathlib import Path
-
 
 
 class ExceptInvaliditem(Exception):
@@ -65,7 +65,7 @@ class TShelf:
     """
     def __init__(self):
         self.__uuid = str(uuid.uuid4())
-        arrBlank = np.zeros((10, 10))
+        arrBlank = np.zeros((v.COMPARTMENT_NUMBER, v.COMPARTMENT_NUMBER))
         self.layout = np.asarray(arrBlank, dtype=object)
 
     def getUuid(self):
@@ -82,7 +82,7 @@ class TFacility:
         super().__init__()
         self.__strName = strFacName
         self.lstShelfs = []
-        for i in range(shelf_number*2):
+        for i in range(shelf_number * 2):
             self.createShelf()
         arrShelfs = np.array(self.lstShelfs)
         self.__layout = np.reshape(arrShelfs, (2, shelf_number))
@@ -130,8 +130,11 @@ class TFacility:
             print('Not enough space! ')
 
     def getLog(self):
-        self.__log = pd.DataFrame(self.__logList)
+        self.__log = pd.DataFrame(self.__logList, columns=['Uuid', 'Time', 'N° Items', 'Items'])
         return self.__log
+
+    def setLoglist(self, data: list):
+        self.__logList = data
 
     def getLogList(self):
         return self.__logList
@@ -140,32 +143,42 @@ class TFacility:
         return self.__path
 
     # Allows to set a path where to save your data
-    def setPath(self, path: Path):
+    def setPath(self, path: str):
         if Path(path).is_dir():
-            self.__path = Path(path)
+            self.__path = path
         else:
             print('Please insert a valid path! ')
 
     # Allows to save a log of the activity to a csv file in a specified directory
     def saveLog(self):
         try:
-            path = Path(''.join([self.__path, r'\log.csv']))
-            print(path)
-            self.getlog().to_csv(path_or_buf=path)
+            path = ''.join([self.getPath(), r'\orders_log.csv'])
+            self.getLog().to_csv(path_or_buf=path, index=False)
         except:
             print('Invalid path!')
 
     def getPosition(self, itemName: str):
-        for i, shelf in enumerate(self.__layout[0]):
-            for h, row in enumerate(shelf.layout):
-                for j, item in enumerate(row):
-                    if item.getName() == itemName:
-                        return [(0, i), (h, j)]
-        for i, shelf in enumerate(self.__layout[1]):
-            for h, row in enumerate(shelf.layout):
-                for j, item in enumerate(row):
-                    if item.getName() == itemName:
-                        return [(1, i), (h, j)]
+        if self.checkItem(itemName):
+            for i, shelf in enumerate(self.__layout[0]):
+                for h, row in enumerate(shelf.layout):
+                    for j, item in enumerate(row):
+                        if item.getName() == itemName:
+                            return [(0, i), (h, j)]
+            for i, shelf in enumerate(self.__layout[1]):
+                for h, row in enumerate(shelf.layout):
+                    for j, item in enumerate(row):
+                        if item.getName() == itemName:
+                            return [(1, i), (h, j)]
+        else:
+            print('Invalid name')
 
     def getItemName(self, position: list):
         return self.__layout[position[0][0], position[0][1]].layout[position[1][0], position[1][1]].getName()
+
+    def checkItem(self, itemName: str):
+        for shelf in self.getLayout().flatten():
+            for art in shelf.layout.flatten():
+                if itemName == art.getName():
+                    return True
+        else:
+            return False
