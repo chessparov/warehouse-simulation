@@ -1,4 +1,7 @@
 # WareHouse simulation
+
+<img src="Images/Test.png">
+
 Discrete events simulation of a warehouse including a nice animation of what's happening behind the scenes.
 
 ## How to run
