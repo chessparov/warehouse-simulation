@@ -102,7 +102,6 @@ def run(facility):
         current_time = pygame.time.get_ticks() * (v.FPS / 21.93)
         elapsed_time = current_time
 
-
         # Variable used to check if i has changed
         j = i
 
