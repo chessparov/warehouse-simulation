@@ -50,11 +50,15 @@ def run():
 
     i = 0
 
-    # Create objects
+    # Load images and create objects
     worker_image = pygame.image.load(r'Images/MFN_worker2.gif')
     box_image = pygame.image.load(r'Images/Box.png')
-    worker = Worker.TWorker(screen, worker_image, 'worker', (v.INITIAL_X + 3 * v.PIXEL_SCALE),
-                            340, 0.1, v.WORKER_SPEED_X, v.WORKER_SPEED_Y)
+
+    worker = Worker.TWorker(screen, worker_image,
+                            (v.INITIAL_X + 3 * v.PIXEL_SCALE),
+                            340, 0.1,
+                            v.WORKER_SPEED_X,
+                            v.WORKER_SPEED_Y)
 
     # Start GUI info
     app = GUI.QApplication(sys.argv)
@@ -115,7 +119,6 @@ def run():
                 else:
                     # Draw the box
                     box = Worker.TWorker(screen, box_image,
-                                         'box',
                                          worker.rect.x + 3,
                                          worker.rect.y + 20,
                                          0.03,
@@ -134,12 +137,16 @@ def run():
 
         # End reached, re-initialize worker
         if j != i:
-            worker = Worker.TWorker(screen, worker_image,
-                                    'worker',
-                                    (v.INITIAL_X + 3 * v.PIXEL_SCALE),
-                                    340, 0.1,
-                                    v.WORKER_SPEED_X,
-                                    v.WORKER_SPEED_Y)
+            # worker = Worker.TWorker(screen, worker_image,
+            #                         (v.INITIAL_X + 3 * v.PIXEL_SCALE),
+            #                         340, 0.1,
+            #                         v.WORKER_SPEED_X,
+            #                         v.WORKER_SPEED_Y)
+            worker.__init__(screen, worker_image,
+                            (v.INITIAL_X + 3 * v.PIXEL_SCALE),
+                            340, 0.1,
+                            v.WORKER_SPEED_X,
+                            v.WORKER_SPEED_Y)
 
         # Quit the simulation
         for event in pygame.event.get():

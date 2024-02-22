@@ -4,9 +4,8 @@ import Variables as v
 
 class TWorker(pygame.sprite.Sprite):
 
-    def __init__(self, screen, image, name: str, x: int, y: int, scale: float, x_speed: float, y_speed: float):
+    def __init__(self, screen, image, x: int, y: int, scale: float, x_speed: float, y_speed: float):
         super().__init__()
-        self.name = name
         self.x = x
         self.y = y
         self.x_travelled = round(float(0))
