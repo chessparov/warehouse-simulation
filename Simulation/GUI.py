@@ -13,6 +13,9 @@ class TMainWindow(QMainWindow):
         super().__init__()
         self.timer = None
         self.clock = None
+        self.scroll = QScrollArea(self)
+        self.widget = QWidget(self)
+        self.layout = QVBoxLayout(self)
         self.counter = int(0)
         self.setWindowTitle("Warehouse DES Info")
         self.setWindowIcon(QtGui.QIcon('Images/Icon.jpg'))
@@ -21,7 +24,7 @@ class TMainWindow(QMainWindow):
 
     def initUI(self):
 
-        # Title
+        # Create title
         title = QLabel(self)
         title.setText("Delivered items")
         title.move(50, 50)
@@ -30,7 +33,7 @@ class TMainWindow(QMainWindow):
         title.setFont(font)
         title.setFixedSize(500, 100)
 
-        # Time the clock
+        # Create elapsed time counter
         self.clock = QLabel("0", self)
         clock_label = QLabel(self)
         self.clock.setFont(QFont("Segoe UI", 18))
@@ -41,12 +44,37 @@ class TMainWindow(QMainWindow):
         clock_label.setText('Elapsed time')
         clock_label.adjustSize()
 
-        # Create label
-        layout = QVBoxLayout(self)
+        # Create column titles
+        column_font = QFont("Segoe UI", 13)
+        column_font.setBold(True)
 
-        # Add item labels
+        col1_title = QLabel(self)
+        col1_title.setFont(column_font)
+        col1_title.setText('Item name')
+        col1_title.move(50, 100)
+        col1_title.setAlignment(Qt.AlignLeft)
+
+        col2_title = QLabel(self)
+        col2_title.setFont(column_font)
+        col2_title.setText('Deliver time')
+        col2_title.move(200, 100)
+        col2_title.setAlignment(Qt.AlignLeft)
+
+        # Add to the main layout all the static labels
+        self.layout.addWidget(title)
+        self.layout.addWidget(clock_label)
+        self.layout.addWidget(self.clock)
+        self.layout.addWidget(col1_title)
+        self.layout.addWidget(col2_title)
+
+        # Create item labels
         path_name = Path(r'.\items_log.csv')
         dtfData = pd.read_csv(path_name)
+
+        # Create space for the item labels for the scrollable box
+        layout = QHBoxLayout(self)
+        lower_layout_left = QVBoxLayout(self)
+        lower_layout_right = QVBoxLayout(self)
 
         for i, item in enumerate(dtfData['Item']):
             art_label = QLabel(self)
@@ -54,7 +82,8 @@ class TMainWindow(QMainWindow):
             art_label.setText(item)
             art_label.move(50, 130 + 25 * i)
             art_label.setAlignment(Qt.AlignLeft)
-            layout.addWidget(art_label)
+            art_label.adjustSize()
+            lower_layout_left.addWidget(art_label)
 
         for j, time in enumerate(dtfData['Deliver Time']):
             deliv_time = QLabel(self)
@@ -62,30 +91,24 @@ class TMainWindow(QMainWindow):
             deliv_time.setText(str(time) + 's')
             deliv_time.move(200, 130 + 25 * j)
             deliv_time.setAlignment(Qt.AlignLeft)
-            layout.addWidget(deliv_time)
+            deliv_time.adjustSize()
+            lower_layout_right.addWidget(deliv_time)
 
-        # Column titles
-        col1_title = QLabel(self)
-        column_font = QFont("Segoe UI", 13)
-        column_font.setBold(True)
-        col1_title.setFont(column_font)
-        col1_title.setText('Item name')
-        col1_title.move(50, 100)
-        col1_title.setAlignment(Qt.AlignLeft)
-        layout.addWidget(col1_title)
+        # Add all the labels to the scrollable window
+        layout.addLayout(lower_layout_left)
+        layout.addLayout(lower_layout_right)
+        self.widget.setLayout(layout)
 
-        col2_title = QLabel(self)
-        col2_title.setFont(column_font)
-        col2_title.setText('Deliver time')
-        col2_title.move(200, 100)
-        col2_title.setAlignment(Qt.AlignLeft)
-        layout.addWidget(col2_title)
+        # Create scrollable box
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidget(self.widget)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setFixedSize(300, 350)
+        self.scroll.move(50, 160)
 
-        # Add all the labels to the window
-        layout.addWidget(title)
-        layout.addWidget(clock_label)
-        layout.addWidget(self.clock)
-        self.setLayout(layout)
+        self.layout.addWidget(self.scroll)
+        self.setLayout(self.layout)
 
     # Clock
     def beginTimer(self):
