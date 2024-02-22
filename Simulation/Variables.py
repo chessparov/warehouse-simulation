@@ -17,7 +17,7 @@ SIM_TIME = 1000
 
 # Visualization variables
 
-FPS = 21.93         # Set to 21.93 for real time visualization
+FPS = 500         # Set to 21.93 for real time visualization
 PIXEL_SCALE = 20
 
 INITIAL_X = 1000
