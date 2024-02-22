@@ -7,6 +7,8 @@ import Worker
 import Background
 import Variables as v
 import GUI
+import Simulation
+
 
 # Checks whether if the OS is windows in order to apply
 # the taskbar icon correctly
@@ -18,10 +20,33 @@ running = True
 elapsed_time = 0
 
 
-def run():
+def run(facility):
 
     global running
     global elapsed_time
+
+    # Handles the exit procedure
+    def myExitHandler():
+
+        pygame.quit()
+        sys.exit(app.exec_())
+
+    # Start GUI info
+    app = GUI.QApplication(sys.argv)
+
+    # Initial dialog
+    dialog = GUI.TInitialDialog()
+    dialog.exec()
+
+    # Start everything if the setup was successful
+    if not running:
+        return
+
+    Simulation.runSimulation(facility)
+
+    # info window
+    win = GUI.TMainWindow()
+    win.show()
 
     pygame.init()
 
@@ -53,22 +78,9 @@ def run():
     # Load images and create objects
     worker_image = pygame.image.load(r'Images/MFN_worker2.gif')
     box_image = pygame.image.load(r'Images/Box.png')
+
     worker_info = screen, worker_image, (v.INITIAL_X + 3 * v.PIXEL_SCALE), 340, 0.1, v.WORKER_SPEED_X, v.WORKER_SPEED_Y
-
     worker = Worker.TWorker(*worker_info)
-
-    # Start GUI info
-    app = GUI.QApplication(sys.argv)
-
-    # Info window
-    win = GUI.TMainWindow()
-    win.show()
-
-    # Handles the exit procedure
-    def myExitHandler():
-
-        pygame.quit()
-        sys.exit(app.exec_())
 
     while running:
 
@@ -89,13 +101,15 @@ def run():
         # Start timer for timeouts
         current_time = pygame.time.get_ticks() * (v.FPS / 21.93)
         elapsed_time = current_time
-        win.beginTimer()
+
 
         # Variable used to check if i has changed
         j = i
 
         # Make the worker move and pick the box
         if i < len(coordinates):
+
+            win.beginTimer()
 
             # Iterative coordinates
             coordinate = coordinates[i]
@@ -107,15 +121,13 @@ def run():
             # When the first leg of the path has been walked
             if worker.end:
                 # Wait for the z axis climb
-                if (current_time - end_time) < (int(z_dist / v.WORKER_SPEED_Z +
+                if not (current_time - end_time) < (int(z_dist / v.WORKER_SPEED_Z +
                                                     x_dist / v.WORKER_SPEED_X +
                                                     y_dist / v.WORKER_SPEED_Y +
                                                     v.WORKER_PICKING_TIME) * 1000):
-                    pass
-
-                else:
                     # Draw the box
-                    box = Worker.TWorker(screen, box_image,
+                    box = Worker.TWorker(screen,
+                                         box_image,
                                          worker.rect.x + 3,
                                          worker.rect.y + 20,
                                          0.03,
