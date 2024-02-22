@@ -53,12 +53,9 @@ def run():
     # Load images and create objects
     worker_image = pygame.image.load(r'Images/MFN_worker2.gif')
     box_image = pygame.image.load(r'Images/Box.png')
+    worker_info = screen, worker_image, (v.INITIAL_X + 3 * v.PIXEL_SCALE), 340, 0.1, v.WORKER_SPEED_X, v.WORKER_SPEED_Y
 
-    worker = Worker.TWorker(screen, worker_image,
-                            (v.INITIAL_X + 3 * v.PIXEL_SCALE),
-                            340, 0.1,
-                            v.WORKER_SPEED_X,
-                            v.WORKER_SPEED_Y)
+    worker = Worker.TWorker(*worker_info)
 
     # Start GUI info
     app = GUI.QApplication(sys.argv)
@@ -137,16 +134,7 @@ def run():
 
         # End reached, re-initialize worker
         if j != i:
-            # worker = Worker.TWorker(screen, worker_image,
-            #                         (v.INITIAL_X + 3 * v.PIXEL_SCALE),
-            #                         340, 0.1,
-            #                         v.WORKER_SPEED_X,
-            #                         v.WORKER_SPEED_Y)
-            worker.__init__(screen, worker_image,
-                            (v.INITIAL_X + 3 * v.PIXEL_SCALE),
-                            340, 0.1,
-                            v.WORKER_SPEED_X,
-                            v.WORKER_SPEED_Y)
+            worker.__init__(*worker_info)
 
         # Quit the simulation
         for event in pygame.event.get():
