@@ -16,42 +16,47 @@ if 'win' in sys.platform:
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(win_id)
 
 running = True
-visualizing = False
+visualizing = True
+end = False
 elapsed_time = 0
 
 
 def run(facility):
 
     global running
+    global end
 
     # Start GUI
     app = GUI.QApplication(sys.argv)
 
-    # Initial dialog
-    dialog = GUI.TInitialDialog()
-    dialog.exec()
+    while not end:
 
-    # Start everything if the setup was successful
-    if not running:
-        return
+        # Initial dialog
+        dialog = GUI.TInitialDialog()
+        dialog.exec()
 
-    Simulation.runSimulation(facility)
+        # Start everything if the setup was successful
+        if not running:
+            return
 
-    # info window
-    win = GUI.TMainWindow()
-    win.show()
+        Simulation.runSimulation(facility)
 
-    startVisualizing(app, win)
+        # info window
+        win = GUI.TMainWindow()
+        win.show()
 
+        while visualizing:
+            startVisualizing(app, win)
 
 
 def startVisualizing(app, win):
 
     global running
+    global end
     global visualizing
     global elapsed_time
 
-    visualizing = False
+    visualizing = True
 
     # Handles the exit procedure
     def myExitHandler():
@@ -78,6 +83,7 @@ def startVisualizing(app, win):
     # Import items to pick
     path_name = Facility.resource_path('data\\items_log.csv')
     dtfData = pd.read_csv(path_name)
+
     coordinates = []
     for i in dtfData.index:
         tpl1 = (dtfData['Position'][i], dtfData['Shelf'][i])
@@ -162,6 +168,8 @@ def startVisualizing(app, win):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+                end = True
+                visualizing = False
 
         pygame.display.update()
 
@@ -169,13 +177,7 @@ def startVisualizing(app, win):
 
     if visualizing:
         running = True
-        restartVisualization(app, win)
+    if not end:
+        running = True
 
     app.aboutToQuit.connect(myExitHandler)
-
-
-def restartVisualization(app, win):
-
-    global visualizing
-
-    startVisualizing(app, win)
