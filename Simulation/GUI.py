@@ -1,11 +1,11 @@
 import pandas as pd
-from pathlib import Path
 from PyQt5 import QtGui
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 import Visualization
 import Variables as v
+import Facility
 
 
 class TMainWindow(QMainWindow):
@@ -19,7 +19,7 @@ class TMainWindow(QMainWindow):
         self.layout = QVBoxLayout(self)
         self.counter = int(0)
         self.setWindowTitle("Warehouse DES Info")
-        self.setWindowIcon(QtGui.QIcon('Images/Icon.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Images\\Icon.jpg'))
         self.setGeometry(1200, 100, 600, 600)
         self.initUI()
 
@@ -45,6 +45,15 @@ class TMainWindow(QMainWindow):
         clock_label.setText('Elapsed time')
         clock_label.adjustSize()
 
+        # Create restart button
+        restart_btn = QPushButton(self)
+        restart_btn.setFont(font)
+        restart_btn.setText("Restart")
+        restart_btn.move(400, 160)
+        restart_btn.setMinimumWidth(150)
+        restart_btn.setMinimumHeight(40)
+        restart_btn.clicked.connect(self.restartSimulation)
+
         # Create column titles
         column_font = QFont("Segoe UI", 13)
         column_font.setBold(True)
@@ -65,11 +74,12 @@ class TMainWindow(QMainWindow):
         self.layout.addWidget(title)
         self.layout.addWidget(clock_label)
         self.layout.addWidget(self.clock)
+        self.layout.addWidget(restart_btn)
         self.layout.addWidget(col1_title)
         self.layout.addWidget(col2_title)
 
         # Create item labels
-        path_name = Path(r'.\items_log.csv')
+        path_name = Facility.resource_path('data\\items_log.csv')
         dtfData = pd.read_csv(path_name)
 
         # Create space for the item labels for the scrollable box
@@ -115,12 +125,16 @@ class TMainWindow(QMainWindow):
     def beginTimer(self):
         self.clock.setText(str(round(Visualization.elapsed_time / 1000)) + ' s')
 
+    def restartSimulation(self):
+        Visualization.running = False
+        Visualization.visualizing = True
+
 
 class TInitialDialog(QDialog):
 
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QtGui.QIcon('Images/Icon.jpg'))
+        self.setWindowIcon(QtGui.QIcon('Images\\Icon.jpg'))
         self.setWindowTitle("Setup")
         self.layout = QVBoxLayout(self)
         self.isSizeGripEnabled()

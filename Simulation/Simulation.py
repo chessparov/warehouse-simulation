@@ -4,6 +4,8 @@ import Variables as v
 import simpy
 import random
 import pandas as pd
+import os
+import sys
 
 intOrders = int(0)
 intPendingItems = int(0)
@@ -14,9 +16,19 @@ order_data = []
 items_data = []
 
 
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+        if not os.path.exists(os.path.join(base_path, "data")):
+            os.mkdir(os.path.join(base_path, "data"))
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 # Wait for the time to pick the necessary object
 def pickItem(env, facility, art: str, resource):
-
     global intPendingItems
     global items_data
 
@@ -26,8 +38,8 @@ def pickItem(env, facility, art: str, resource):
     y_dist = item_coordinates[1][0] * v.INTER_COMPARTMENT_DISTANCE * 2 + 3
     z_dist = item_coordinates[1][1] * v.INTER_COMPARTMENT_DISTANCE * 2
 
-    pick_time = (x_dist/v.WORKER_SPEED_X + y_dist/v.WORKER_SPEED_Y
-                 + z_dist/v.WORKER_SPEED_Z + v.WORKER_PICKING_TIME)
+    pick_time = (x_dist / v.WORKER_SPEED_X + y_dist / v.WORKER_SPEED_Y
+                 + z_dist / v.WORKER_SPEED_Z + v.WORKER_PICKING_TIME)
 
     with resource.request() as req:
         yield req
@@ -40,12 +52,12 @@ def pickItem(env, facility, art: str, resource):
         # Refresh the pending items queue
         intPendingItems -= 1
 
-    data = [art, item_coordinates[0][0], item_coordinates[0][1], item_coordinates[1][0], item_coordinates[1][1], start_time, end_time]
+    data = [art, item_coordinates[0][0], item_coordinates[0][1], item_coordinates[1][0], item_coordinates[1][1],
+            start_time, end_time]
     items_data.append(data)
 
 
 def processOrder_by_item(env, items, facility):
-
     workers = simpy.Resource(env, v.NUM_WORKERS)
 
     while True:
@@ -62,7 +74,6 @@ def processOrder_by_item(env, items, facility):
 
 # Periodically generates new orders
 def generateOrder(env, facility):
-
     global lstOrders
     global lstOrdersItems
     global order_data
@@ -110,7 +121,6 @@ def generateOrder(env, facility):
 
 
 def runSimulation(facility):
-
     global lstOrders
     global items_data
     global order_data
@@ -128,15 +138,25 @@ def runSimulation(facility):
     env.process(processOrder_by_item(env, lstOrdersItems, facility))
 
     env.run(until=v.SIM_TIME)
+
     facility.setLoglist(order_data)
-    facility.setPath(r'.\\')
     facility.saveLog()
-    dtfItems = pd.DataFrame(items_data, columns=['Item', 'Position', 'Shelf', 'Row', 'Column', 'Pick Time', 'Deliver Time'])
-    dtfItems.to_csv(r'.\items_log.csv', index=False)
+
+    dtfItems = pd.DataFrame(items_data, columns=['Item',
+                                                 'Position',
+                                                 'Shelf',
+                                                 'Row',
+                                                 'Column',
+                                                 'Pick Time',
+                                                 'Deliver Time'])
+
+    path = resource_path(''.join([facility.getPath(), 'items_log.csv']))
+    dtfItems.to_csv(path_or_buf=path,
+                    index=False)
 
     # Analyze data
-    print(f'\n{"-"*40}\n'
+    print(f'\n{"-" * 40}\n'
           f'Total orders received: {intOrders}\n'
           f'Total items requested: {intTotalItems}\n'
           f'Pending Items: {intPendingItems}\n'
-          f'{"-"*40}')
+          f'{"-" * 40}')
