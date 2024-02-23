@@ -2,13 +2,12 @@ import pygame
 import ctypes
 import sys
 import pandas as pd
-from pathlib import Path
 import Worker
 import Background
 import Variables as v
 import GUI
 import Simulation
-
+import Facility
 
 # Checks whether if the OS is windows in order to apply
 # the taskbar icon correctly
@@ -17,21 +16,15 @@ if 'win' in sys.platform:
     ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(win_id)
 
 running = True
+visualizing = False
 elapsed_time = 0
 
 
 def run(facility):
 
     global running
-    global elapsed_time
 
-    # Handles the exit procedure
-    def myExitHandler():
-
-        pygame.quit()
-        sys.exit(app.exec_())
-
-    # Start GUI info
+    # Start GUI
     app = GUI.QApplication(sys.argv)
 
     # Initial dialog
@@ -48,13 +41,31 @@ def run(facility):
     win = GUI.TMainWindow()
     win.show()
 
+    startVisualizing(app, win)
+
+
+
+def startVisualizing(app, win):
+
+    global running
+    global visualizing
+    global elapsed_time
+
+    visualizing = False
+
+    # Handles the exit procedure
+    def myExitHandler():
+
+        pygame.quit()
+        sys.exit(app.exec_())
+
     pygame.init()
 
     # Set window title
     pygame.display.set_caption('Warehouse DES')
 
     # Create an icon
-    icon = pygame.image.load(r'Images/Icon.jpg')
+    icon = pygame.image.load('Images\\Icon.jpg')
     pygame.display.set_icon(icon)
 
     # Set screen size
@@ -65,7 +76,7 @@ def run(facility):
     end_time = 0
 
     # Import items to pick
-    path_name = Path(r'.\items_log.csv')
+    path_name = Facility.resource_path('data\\items_log.csv')
     dtfData = pd.read_csv(path_name)
     coordinates = []
     for i in dtfData.index:
@@ -76,8 +87,8 @@ def run(facility):
     i = 0
 
     # Load images and create objects
-    worker_image = pygame.image.load(r'Images/MFN_worker2.gif')
-    box_image = pygame.image.load(r'Images/Box.png')
+    worker_image = pygame.image.load('Images\\MFN_worker2.gif')
+    box_image = pygame.image.load('Images\\Box.png')
 
     worker_info = screen, worker_image, (v.INITIAL_X + 3 * v.PIXEL_SCALE), 340, 0.1, v.WORKER_SPEED_X, v.WORKER_SPEED_Y
     worker = Worker.TWorker(*worker_info)
@@ -121,9 +132,9 @@ def run(facility):
             if worker.end:
                 # Wait for the z axis climb
                 if not (current_time - end_time) < (int(z_dist / v.WORKER_SPEED_Z +
-                                                    x_dist / v.WORKER_SPEED_X +
-                                                    y_dist / v.WORKER_SPEED_Y +
-                                                    v.WORKER_PICKING_TIME) * 1000):
+                                                        x_dist / v.WORKER_SPEED_X +
+                                                        y_dist / v.WORKER_SPEED_Y +
+                                                        v.WORKER_PICKING_TIME) * 1000):
                     # Draw the box
                     box = Worker.TWorker(screen,
                                          box_image,
@@ -155,8 +166,16 @@ def run(facility):
         pygame.display.update()
 
     pygame.quit()
+
+    if visualizing:
+        running = True
+        restartVisualization(app, win)
+
     app.aboutToQuit.connect(myExitHandler)
 
 
+def restartVisualization(app, win):
 
+    global visualizing
 
+    startVisualizing(app, win)
