@@ -1,11 +1,11 @@
+import os
+import sys
+import random
+import simpy
+import pandas as pd
 import Facility
 import Orders
 import Variables as v
-import simpy
-import random
-import pandas as pd
-import os
-import sys
 
 intOrders = int(0)
 intPendingItems = int(0)
@@ -14,6 +14,12 @@ lstOrders = []
 lstOrdersItems = []
 order_data = []
 items_data = []
+
+dtfFinalAnalysis = pd.DataFrame([],
+                                columns=["Number of orders",
+                                         "Number of items",
+                                         "Pending items"
+                                         ])
 
 
 def resource_path(relative_path):
@@ -52,8 +58,12 @@ def pickItem(env, facility, art: str, resource):
         # Refresh the pending items queue
         intPendingItems -= 1
 
-    data = [art, item_coordinates[0][0], item_coordinates[0][1], item_coordinates[1][0], item_coordinates[1][1],
-            start_time, end_time]
+    data = [art, item_coordinates[0][0],
+            item_coordinates[0][1],
+            item_coordinates[1][0],
+            item_coordinates[1][1],
+            start_time, end_time
+            ]
     items_data.append(data)
 
 
@@ -81,6 +91,8 @@ def generateOrder(env, facility):
     global intTotalItems
     global intPendingItems
 
+    lstOrdersItems = []
+
     def orderGenerator(facility):
 
         lstItems = []
@@ -94,7 +106,7 @@ def generateOrder(env, facility):
                 item_count -= 1
             return Orders.TOrder(lstItems)
         else:
-            print('Invalid facility! ')
+            return 'Invalid facility! '
 
     while True:
 
@@ -122,14 +134,21 @@ def generateOrder(env, facility):
 
 def runSimulation(facility):
     global lstOrders
+    global dtfFinalAnalysis
     global items_data
     global order_data
     global intOrders
     global intPendingItems
     global intTotalItems
 
+    intOrders = int(0)
+    intPendingItems = int(0)
+    intTotalItems = int(0)
+    order_data = []
+    items_data = []
+
     if not isinstance(facility, Facility.TFacility):
-        return f'Invalid facility! '
+        return 'Invalid facility! '
 
     env = simpy.Environment()
     print(f'Starting simulation at {env.now:.2f}')
@@ -160,3 +179,11 @@ def runSimulation(facility):
           f'Total items requested: {intTotalItems}\n'
           f'Pending Items: {intPendingItems}\n'
           f'{"-" * 40}')
+
+    # Save analyzed data
+    dtfAnalysis = pd.DataFrame({"Number of orders": [intOrders],
+                                "Number of items": [intTotalItems],
+                                "Pending items": [intPendingItems],
+                                })
+
+    dtfFinalAnalysis = pd.concat([dtfFinalAnalysis, dtfAnalysis], ignore_index=True)

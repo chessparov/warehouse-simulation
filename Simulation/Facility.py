@@ -1,10 +1,10 @@
-import Variables as v
-import uuid
-import numpy as np
-import pandas as pd
 from pathlib import Path
 import os
+import uuid
 import sys
+import pandas as pd
+import numpy as np
+import Variables as v
 
 
 def resource_path(relative_path):
@@ -29,7 +29,7 @@ class ExceptInvaliditem(Exception):
         super().__init__(self, *args)
 
     def __str__(self):
-        return f"Invalid Item! The item doesn't currently exist. "
+        return "Invalid Item! The item doesn't currently exist. "
 
 
 class TItem:
@@ -73,6 +73,7 @@ class TShelf:
     This class represents a section of the storage facility with a capacity of 10x10
 
     """
+
     def __init__(self):
         self.__uuid = str(uuid.uuid4())
         arrBlank = np.zeros((v.COMPARTMENT_NUMBER, v.COMPARTMENT_NUMBER))
@@ -88,11 +89,12 @@ class TFacility:
     Defines the whole storage facility with all the sections and items stored
 
     """
+
     def __init__(self, strFacName: str, shelf_number: int):
         super().__init__()
         self.__strName = strFacName
         self.lstShelfs = []
-        for i in range(shelf_number * 2):
+        for _ in range(shelf_number * 2):
             self.createShelf()
         arrShelfs = np.array(self.lstShelfs)
         self.__layout = np.reshape(arrShelfs, (2, shelf_number))
@@ -165,8 +167,14 @@ class TFacility:
         try:
             path = resource_path(''.join([self.getPath(), 'orders_log.csv']))
             self.getLog().to_csv(path_or_buf=path, index=False)
-        except:
-            print('Invalid path!')
+        except FileNotFoundError:
+            print('File not found! ')
+        except SyntaxError:
+            print("Invalid path! Check syntax ")
+        except OSError:
+            print("Invalid path! OS Error ")
+        except Exception:
+            print("Path not found! ")
 
     def getPosition(self, itemName: str):
         if self.checkItem(itemName):
@@ -184,12 +192,13 @@ class TFacility:
             print('Invalid name')
 
     def getItemName(self, position: list):
-        return self.__layout[position[0][0], position[0][1]].layout[position[1][0], position[1][1]].getName()
+        return (self.__layout[position[0][0],
+        position[0][1]].layout[position[1][0],
+        position[1][1]].getName())
 
     def checkItem(self, itemName: str):
         for shelf in self.getLayout().flatten():
             for art in shelf.layout.flatten():
                 if itemName == art.getName():
                     return True
-        else:
-            return False
+        return False

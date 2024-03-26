@@ -46,13 +46,24 @@ class TMainWindow(QMainWindow):
         clock_label.adjustSize()
 
         # Create restart button
-        restart_btn = QPushButton(self)
-        restart_btn.setFont(font)
-        restart_btn.setText("Restart")
-        restart_btn.move(400, 160)
-        restart_btn.setMinimumWidth(150)
-        restart_btn.setMinimumHeight(40)
-        restart_btn.clicked.connect(self.restartSimulation)
+        btn_font = QFont("Segoe UI", 15)
+
+        restart_btn_a = QPushButton(self)
+        restart_btn_a.setFont(btn_font)
+        restart_btn_a.setText("Restart\nanimation")
+        restart_btn_a.move(400, 160)
+        restart_btn_a.setMinimumWidth(180)
+        restart_btn_a.setMinimumHeight(80)
+        restart_btn_a.clicked.connect(self.triggerRestartVisualization)
+
+        # Create restart simulation button
+        restart_btn_s = QPushButton(self)
+        restart_btn_s.setFont(btn_font)
+        restart_btn_s.setText("Restart\nsimulation")
+        restart_btn_s.move(400, 250)
+        restart_btn_s.setMinimumWidth(180)
+        restart_btn_s.setMinimumHeight(80)
+        restart_btn_s.clicked.connect(self.triggerRestartSimulation)
 
         # Create column titles
         column_font = QFont("Segoe UI", 13)
@@ -74,7 +85,8 @@ class TMainWindow(QMainWindow):
         self.layout.addWidget(title)
         self.layout.addWidget(clock_label)
         self.layout.addWidget(self.clock)
-        self.layout.addWidget(restart_btn)
+        self.layout.addWidget(restart_btn_a)
+        self.layout.addWidget(restart_btn_s)
         self.layout.addWidget(col1_title)
         self.layout.addWidget(col2_title)
 
@@ -125,9 +137,22 @@ class TMainWindow(QMainWindow):
     def beginTimer(self):
         self.clock.setText(str(round(Visualization.elapsed_time / 1000)) + ' s')
 
-    def restartSimulation(self):
+    @staticmethod
+    def triggerRestartVisualization():
         Visualization.running = False
         Visualization.visualizing = True
+
+    def triggerRestartSimulation(self):
+        Visualization.visualizing = False
+        Visualization.running = False
+        Visualization.end = False
+        self.hide()
+
+    def closeEvent(self, event):
+        Visualization.running = False
+        Visualization.end = True
+        Visualization.visualizing = False
+        event.accept()
 
 
 class TInitialDialog(QDialog):
@@ -137,7 +162,8 @@ class TInitialDialog(QDialog):
         self.setWindowIcon(QtGui.QIcon('Images\\Icon.jpg'))
         self.setWindowTitle("Setup")
         self.layout = QVBoxLayout(self)
-        self.isSizeGripEnabled()
+        self.setSizeGripEnabled(True)
+        self.real_close = True
         self.setup()
 
     def setup(self):
@@ -189,8 +215,6 @@ class TInitialDialog(QDialog):
                     else:
                         return False
                 return True
-            else:
-                return False
 
         GRID_WIDTH = 200
         font = QFont("Segoe UI", 10)
@@ -322,7 +346,7 @@ class TInitialDialog(QDialog):
         confirmation_button.setText("Run simulation")
         confirmation_button.setFont(btn_font)
         confirmation_button.setMinimumHeight(60)
-        confirmation_button.clicked.connect(self.hide)
+        confirmation_button.clicked.connect(self.running)
 
         lower_layout.addWidget(blank_space)
         lower_layout.addWidget(confirmation_button)
@@ -332,6 +356,11 @@ class TInitialDialog(QDialog):
         self.layout.addLayout(lower_layout)
         self.setLayout(self.layout)
 
+    def running(self):
+        Visualization.running = True
+        Visualization.visualizing = True
+        self.real_close = False
+        self.close()
 
     def raiseInvalidInput(self):
 
@@ -345,14 +374,21 @@ class TInitialDialog(QDialog):
 
     def closeEvent(self, event):
 
-        reply = QMessageBox.question(self, 'Window Close', 'Are you sure you want to exit?',
-                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if self.real_close:
 
-        if reply == QMessageBox.Yes:
-            Visualization.running = False
-            event.accept()
+            reply = QMessageBox.question(self, 'Window Close', 'Are you sure you want to exit?',
+                                         QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+            if reply == QMessageBox.Yes:
+                Visualization.running = False
+                Visualization.end = True
+                event.accept()
+            else:
+                Visualization.end = False
+                event.ignore()
+
         else:
-            event.ignore()
+            event.accept()
 
     def keyPressEvent(self, e: QKeyEvent):
 

@@ -19,8 +19,10 @@ class TWorker(pygame.sprite.Sprite):
         self.reverse_end = False
 
         # Load worker image
-        self.worker_image = pygame.transform.scale(image, (int(image.get_width() * self.scale),
-                                                                  int(image.get_height() * self.scale)))
+        self.worker_image = pygame.transform.scale(image,
+                                                   (int(image.get_width() * self.scale),
+                                                    int(image.get_height() * self.scale))
+                                                   )
 
         # Create an instance of the above image
         self.rect = self.worker_image.get_rect()
@@ -34,15 +36,14 @@ class TWorker(pygame.sprite.Sprite):
 
         if self.end:
             return
-        else:
-            left = True
 
+        left = True
         right = False
         up = False
         down = False
 
-        x_dist = coordinates[0][1] * v.INTER_SHELF_DISTANCE * v.PIXEL_SCALE + 1 * v.PIXEL_SCALE
-        y_dist = coordinates[1][0] * v.INTER_COMPARTMENT_DISTANCE * v.PIXEL_SCALE + 3 * v.PIXEL_SCALE
+        x_dist = coordinates[0][1] * v.PIXEL_SCALE * (v.INTER_SHELF_DISTANCE + 1)
+        y_dist = coordinates[1][0] * v.PIXEL_SCALE * (v.INTER_COMPARTMENT_DISTANCE + 3)
 
         if round(self.x_travelled) == x_dist:
             left = False
