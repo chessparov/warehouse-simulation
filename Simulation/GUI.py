@@ -20,7 +20,7 @@ class TMainWindow(QMainWindow):
         self.layout = QVBoxLayout(self)
         self.counter = int(0)
         self.setWindowTitle("Warehouse DES Info")
-        self.setWindowIcon(QtGui.QIcon('Images\\Icon.jpg'))
+        self.setWindowIcon(QtGui.QIcon(utils.getRelPath('Images\\Icon.jpg')))
         self.setGeometry(1200, 100, 600, 600)
         self.initUI()
 
