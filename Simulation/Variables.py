@@ -3,7 +3,7 @@ Simulation variables
 
 """
 
-NUM_WORKERS = 8  # Currently unable to visualize more than one worker
+NUM_WORKERS = 1  # Currently unable to visualize more than one worker
 
 WORKER_SPEED_X = 1  # Don't set speeds below 0.5
 WORKER_SPEED_Y = 1  # Don't set speeds below 0.5

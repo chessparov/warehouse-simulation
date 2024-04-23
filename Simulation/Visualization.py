@@ -91,7 +91,6 @@ def startVisualizing(app, win):
         tpl1 = (dtfData['Position'][i], dtfData['Shelf'][i])
         tpl2 = (dtfData['Row'][i], dtfData['Column'][i])
         coordinates.append([tpl1, tpl2])
-
     i = 0
 
     # Load images and create objects

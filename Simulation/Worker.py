@@ -42,8 +42,11 @@ class TWorker(pygame.sprite.Sprite):
         up = False
         down = False
 
-        x_dist = coordinates[0][1] * v.PIXEL_SCALE * (v.INTER_SHELF_DISTANCE + 1)
-        y_dist = coordinates[1][0] * v.PIXEL_SCALE * (v.INTER_COMPARTMENT_DISTANCE + 3)
+        # x_dist = coordinates[0][1] * v.PIXEL_SCALE * (v.INTER_SHELF_DISTANCE + 1)
+        # y_dist = coordinates[1][0] * v.PIXEL_SCALE * (v.INTER_COMPARTMENT_DISTANCE + 3)
+
+        x_dist = coordinates[0][1] * v.INTER_SHELF_DISTANCE * v.PIXEL_SCALE + 1 * v.PIXEL_SCALE
+        y_dist = coordinates[1][0] * v.INTER_COMPARTMENT_DISTANCE * v.PIXEL_SCALE + 3 * v.PIXEL_SCALE
 
         if round(self.x_travelled) == x_dist:
             left = False
