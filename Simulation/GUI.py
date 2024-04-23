@@ -218,15 +218,18 @@ class TInitialDialog(QDialog):
 
         def checkString(text: str):
 
-            if text != "":
-                for char in text:
-                    if char.isdecimal():
-                        continue
-                    if char == ".":
-                        continue
-                    else:
-                        return False
-                return True
+            if text == "":
+                return False
+            if text[0] == "0":
+                return False
+            for char in text:
+                if char.isdecimal():
+                    continue
+                if char == ".":
+                    continue
+                else:
+                    return False
+            return True
 
         GRID_WIDTH = 200
         font = QFont("Segoe UI", 10)
