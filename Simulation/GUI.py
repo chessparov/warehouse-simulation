@@ -149,17 +149,6 @@ class TMainWindow(QMainWindow):
         Visualization.end = False
         self.hide()
 
-    def closeEvent(self, a0):
-        Visualization.running = False
-        Visualization.end = True
-        Visualization.visualizing = False
-
-    def triggerRestartSimulation(self):
-        Visualization.visualizing = False
-        Visualization.running = False
-        Visualization.end = False
-        self.hide()
-
     def closeEvent(self, event):
         Visualization.running = False
         Visualization.end = True
