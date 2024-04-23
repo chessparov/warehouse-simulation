@@ -91,8 +91,6 @@ def generateOrder(env, facility):
     global intTotalItems
     global intPendingItems
 
-    lstOrdersItems = []
-
     def orderGenerator(facility):
 
         lstItems = []
@@ -140,6 +138,7 @@ def runSimulation(facility):
     global intOrders
     global intPendingItems
     global intTotalItems
+    global lstOrdersItems
 
     intOrders = int(0)
     intPendingItems = int(0)
@@ -169,7 +168,7 @@ def runSimulation(facility):
                                                  'Pick Time',
                                                  'Deliver Time'])
 
-    path = resource_path(''.join([facility.getPath(), 'items_log.csv']))
+    path = resource_path(os.path.join(facility.getPath(), 'items_log.csv'))
     dtfItems.to_csv(path_or_buf=path,
                     index=False)
 

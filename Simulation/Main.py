@@ -1,3 +1,5 @@
+import os.path
+
 import Facility
 import Variables as v
 import Visualization
@@ -20,5 +22,9 @@ facility_1.setItems(art_list)
 ##################################################################################################################
 
 if __name__ == "__main__":
+
+    data_dir = os.path.join(os.path.dirname(os.getcwd()), "data")
+    if not os.path.isdir(data_dir):
+        os.mkdir(data_dir)
 
     Visualization.run(facility_1)

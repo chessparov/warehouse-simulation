@@ -99,7 +99,7 @@ class TFacility:
         arrShelfs = np.array(self.lstShelfs)
         self.__layout = np.reshape(arrShelfs, (2, shelf_number))
 
-        self.__path = "data\\"
+        self.__path = os.path.join(os.path.dirname(os.getcwd()), "data\\")
         self.__logList = []
         self.__log = pd.DataFrame
 

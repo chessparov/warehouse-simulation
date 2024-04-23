@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 import Visualization
 import Variables as v
 import Facility
+import utils
 
 
 class TMainWindow(QMainWindow):
@@ -91,7 +92,7 @@ class TMainWindow(QMainWindow):
         self.layout.addWidget(col2_title)
 
         # Create item labels
-        path_name = Facility.resource_path('data\\items_log.csv')
+        path_name = Facility.resource_path(utils.getRelPath('data\\items_log.csv'))
         dtfData = pd.read_csv(path_name)
 
         # Create space for the item labels for the scrollable box
@@ -170,7 +171,7 @@ class TInitialDialog(QDialog):
 
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QtGui.QIcon('Images\\Icon.jpg'))
+        self.setWindowIcon(QtGui.QIcon(utils.getRelPath('Images\\Icon.jpg')))
         self.setWindowTitle("Setup")
         self.layout = QVBoxLayout(self)
         self.setSizeGripEnabled(True)
@@ -389,7 +390,6 @@ class TInitialDialog(QDialog):
 
             reply = QMessageBox.question(self, 'Window Close', 'Are you sure you want to exit?',
                                          QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-
 
             if reply == QMessageBox.Yes:
                 Visualization.running = False
