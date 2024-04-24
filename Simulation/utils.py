@@ -2,4 +2,5 @@ import os
 
 
 def getRelPath(path: str):
-    return os.path.join(os.path.dirname(os.getcwd()), path)
+    parent = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir))
+    return os.path.join(parent, path)

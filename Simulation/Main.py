@@ -1,6 +1,6 @@
 import os.path
-
 import Facility
+import utils
 import Variables as v
 import Visualization
 import numpy as np
@@ -23,7 +23,7 @@ facility_1.setItems(art_list)
 
 if __name__ == "__main__":
 
-    data_dir = os.path.join(os.path.dirname(os.getcwd()), "data")
+    data_dir = utils.getRelPath("data")
     if not os.path.isdir(data_dir):
         os.mkdir(data_dir)
 
