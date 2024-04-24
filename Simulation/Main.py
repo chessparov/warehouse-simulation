@@ -1,6 +1,7 @@
 import os.path
-
+import sys
 import Facility
+import utils
 import Variables as v
 import Visualization
 import numpy as np
@@ -23,8 +24,14 @@ facility_1.setItems(art_list)
 
 if __name__ == "__main__":
 
-    data_dir = os.path.join(os.path.dirname(os.getcwd()), "data")
+    data_dir = utils.getRelPath("data")
     if not os.path.isdir(data_dir):
         os.mkdir(data_dir)
 
-    Visualization.run(facility_1)
+    try:
+        Visualization.run(facility_1)
+    except Exception as e:
+        with open("log.txt", "w+") as log:
+            log.write(repr(e))
+            type, value, traceback = sys.exc_info()
+            log.write('Error opening %s: %s' % (value.filename, value.strerror))

@@ -1,21 +1,9 @@
 from pathlib import Path
-import os
 import uuid
-import sys
 import pandas as pd
 import numpy as np
+import utils
 import Variables as v
-
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-        if not os.path.exists(os.path.join(base_path, "data")):
-            os.mkdir(os.path.join(base_path, "data"))
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
 
 
 class ExceptInvaliditem(Exception):
@@ -99,7 +87,7 @@ class TFacility:
         arrShelfs = np.array(self.lstShelfs)
         self.__layout = np.reshape(arrShelfs, (2, shelf_number))
 
-        self.__path = os.path.join(os.path.dirname(os.getcwd()), "data\\")
+        self.__path = utils.resource_path("data\\")
         self.__logList = []
         self.__log = pd.DataFrame
 
@@ -165,7 +153,7 @@ class TFacility:
     # Allows to save a log of the activity to a csv file in a specified directory
     def saveLog(self):
         try:
-            path = resource_path(''.join([self.getPath(), 'orders_log.csv']))
+            path = utils.resource_path(''.join([self.getPath(), 'orders_log.csv']))
             self.getLog().to_csv(path_or_buf=path, index=False)
         except FileNotFoundError:
             print('File not found! ')
