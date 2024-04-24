@@ -20,7 +20,7 @@ class TMainWindow(QMainWindow):
         self.layout = QVBoxLayout(self)
         self.counter = int(0)
         self.setWindowTitle("Warehouse DES Info")
-        self.setWindowIcon(QtGui.QIcon('Images\\Icon.jpg'))
+        self.setWindowIcon(QtGui.QIcon(utils.getRelPath('Images\\Icon.jpg')))
         self.setGeometry(1200, 100, 600, 600)
         self.initUI()
 
@@ -149,17 +149,6 @@ class TMainWindow(QMainWindow):
         Visualization.end = False
         self.hide()
 
-    def closeEvent(self, a0):
-        Visualization.running = False
-        Visualization.end = True
-        Visualization.visualizing = False
-
-    def triggerRestartSimulation(self):
-        Visualization.visualizing = False
-        Visualization.running = False
-        Visualization.end = False
-        self.hide()
-
     def closeEvent(self, event):
         Visualization.running = False
         Visualization.end = True
@@ -218,15 +207,18 @@ class TInitialDialog(QDialog):
 
         def checkString(text: str):
 
-            if text != "":
-                for char in text:
-                    if char.isdecimal():
-                        continue
-                    if char == ".":
-                        continue
-                    else:
-                        return False
-                return True
+            if text == "":
+                return False
+            if text[0] == "0":
+                return False
+            for char in text:
+                if char.isdecimal():
+                    continue
+                if char == ".":
+                    continue
+                else:
+                    return False
+            return True
 
         GRID_WIDTH = 200
         font = QFont("Segoe UI", 10)
