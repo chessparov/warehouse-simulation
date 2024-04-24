@@ -1,10 +1,10 @@
 import os
-import sys
 import random
 import simpy
 import pandas as pd
 import Facility
 import Orders
+import utils
 import Variables as v
 
 intOrders = int(0)
@@ -20,17 +20,6 @@ dtfFinalAnalysis = pd.DataFrame([],
                                          "Number of items",
                                          "Pending items"
                                          ])
-
-
-def resource_path(relative_path):
-    try:
-        base_path = sys._MEIPASS
-        if not os.path.exists(os.path.join(base_path, "data")):
-            os.mkdir(os.path.join(base_path, "data"))
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
 
 
 # Wait for the time to pick the necessary object
@@ -168,7 +157,7 @@ def runSimulation(facility):
                                                  'Pick Time',
                                                  'Deliver Time'])
 
-    path = resource_path(os.path.join(facility.getPath(), 'items_log.csv'))
+    path = utils.resource_path(os.path.join(facility.getPath(), 'items_log.csv'))
     dtfItems.to_csv(path_or_buf=path,
                     index=False)
 

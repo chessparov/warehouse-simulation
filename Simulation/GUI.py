@@ -20,7 +20,7 @@ class TMainWindow(QMainWindow):
         self.layout = QVBoxLayout(self)
         self.counter = int(0)
         self.setWindowTitle("Warehouse DES Info")
-        self.setWindowIcon(QtGui.QIcon(utils.getRelPath('Images\\Icon.jpg')))
+        self.setWindowIcon(QtGui.QIcon(utils.resource_path('Images\\Icon.jpg')))
         self.setGeometry(1200, 100, 600, 600)
         self.initUI()
 
@@ -92,7 +92,7 @@ class TMainWindow(QMainWindow):
         self.layout.addWidget(col2_title)
 
         # Create item labels
-        path_name = Facility.resource_path(utils.getRelPath('data\\items_log.csv'))
+        path_name = utils.resource_path('data\\items_log.csv')
         dtfData = pd.read_csv(path_name)
 
         # Create space for the item labels for the scrollable box
@@ -160,7 +160,7 @@ class TInitialDialog(QDialog):
 
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QtGui.QIcon(utils.getRelPath('Images\\Icon.jpg')))
+        self.setWindowIcon(QtGui.QIcon(utils.resource_path('Images\\Icon.jpg')))
         self.setWindowTitle("Setup")
         self.layout = QVBoxLayout(self)
         self.setSizeGripEnabled(True)

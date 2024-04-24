@@ -71,7 +71,7 @@ def startVisualizing(app, win):
     pygame.display.set_caption('Warehouse DES')
 
     # Create an icon
-    icon = pygame.image.load(utils.getRelPath('Images\\Icon.jpg'))
+    icon = pygame.image.load(utils.resource_path('Images\\Icon.jpg'))
     pygame.display.set_icon(icon)
 
     # Set screen size
@@ -82,7 +82,7 @@ def startVisualizing(app, win):
     end_time = 0
 
     # Import items to pick
-    path_name = Facility.resource_path(utils.getRelPath('data\\items_log.csv'))
+    path_name = utils.resource_path('data\\items_log.csv')
     dtfData = pd.read_csv(path_name)
 
     coordinates = []
@@ -93,8 +93,8 @@ def startVisualizing(app, win):
     i = 0
 
     # Load images and create objects
-    worker_image = pygame.image.load(utils.getRelPath('Images\\MFN_worker2.gif'))
-    box_image = pygame.image.load(utils.getRelPath('Images\\Box.png'))
+    worker_image = pygame.image.load(utils.resource_path('Images\\MFN_worker2.gif'))
+    box_image = pygame.image.load(utils.resource_path('Images\\Box.png'))
 
     worker_info = [screen, worker_image,
                    (v.INITIAL_X + 3 * v.PIXEL_SCALE),
